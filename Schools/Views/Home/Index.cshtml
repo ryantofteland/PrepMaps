@@ -1,0 +1,73 @@
+﻿@using Newtonsoft.Json
+@using Schools.Models
+
+@model IList<SchoolCategory>
+
+@{
+    ViewBag.Title = "PrepMaps - Minnesota";
+}
+
+
+<div class="row-fluid">
+	<div class="span3">
+		<div class="sidebar hidden-phone">
+			@Html.Partial("_Sidebar")
+		</div>
+	</div>
+	<div class="span9">
+		<div id="map_canvas"></div>
+
+		<div style="display:none">
+			<div id="info-window-tmpl">
+				<h5 class="title"></h5>
+				<div class="enroll">
+					<span>Enrollment: </span>
+					<span class="value"></span>
+				</div>
+			</div>
+		</div>       
+	</div>		
+</div>
+
+<div class="row-fluid">
+	<div class="span3 description acenter">
+		<div class="acenter visible-phone">
+			<button id="findme" class="btn btn-large btn-primary findme">Find My Location</button>
+		</div>
+		<p>
+			<strong>A map of Minnesota high schools categorized by enrollment size.</strong>		
+		</p>
+		<p>
+			<small>Enrollment data available from  <a href="http://www.mshsl.org/mshsl/enrollments.asp">MSHSL</a>.</small>
+		</p>
+	</div>
+</div>
+
+<hr />
+
+<footer>
+	<p class="acenter">&copy; <a href="http://www.toftwareconsulting.com">Toftware Consulting @DateTime.Today.Year</a></p>
+</footer>
+
+
+@section FooterScripts
+{
+    <script id="CategoryItemTemplate" type="text/html">
+		<span class="icon pull-left {{#Disabled}} hidden {{/Disabled}}"><img src="@Url.Content("~/content/images/icon-{{ Color }}.png")" /></span>
+		<span class="icon pull-left {{#Enabled}} hidden {{/Enabled}}"><img src="@Url.Content("~/content/images/icon-gray.png")" /></span>
+		<span class="pull-left"><h5>{{ Description }} ({{ Range }})</h5></span>
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            var rootUrl = '@Url.Content("~")';
+            PrepMaps.Core.InitializeApplication(rootUrl);
+
+            var categories = @MvcHtmlString.Create(JsonConvert.SerializeObject(Model, Formatting.Indented));	
+			var categoryList = new CategoryList(categories);
+			var categoryListView = new CategoryListView({
+				collection: categoryList
+			});
+        });
+    </script>
+}
