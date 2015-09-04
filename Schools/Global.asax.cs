@@ -36,25 +36,7 @@ namespace Schools
 
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
-
-            var webhostAssembly = Assembly.GetExecutingAssembly();
-
-            var builder = new ContainerBuilder();
-            builder.RegisterControllers(webhostAssembly);
-
-            builder.RegisterAssemblyTypes(webhostAssembly)
-                .Where(t => t.IsAssignableTo<ISingletonService>())
-                .AsImplementedInterfaces()
-                .SingleInstance();
-
-            builder.RegisterAssemblyTypes(webhostAssembly)
-                .Where(t => t.IsAssignableTo<IService>())
-                .AsImplementedInterfaces();
-
-            var container = builder.Build();
-            DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
-
-            //RegisterAutofacIoc();
+            RegisterAutofacIoc();
         }
 
         private void RegisterAutofacIoc()
